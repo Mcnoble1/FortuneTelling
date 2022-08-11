@@ -3,15 +3,18 @@
 export const main = Reach.App(() => {
   const A = Participant('Alice', {
     // Specify Alice's interact interface here
-    getDecision: Fun([], UInt),
+    getDecision: Fun([], Bool),
     fortunePrice: Fun([], UInt),
+    showFortune: Fun([Bytes(64)], Null),
   });
   const B = Participant('Bob', {
     // Specify Bob's interact interface here
-    readFortune: Fun([], Null),
+    readFortune: Fun([], Bytes(64)),
     acceptPayment: Fun([UInt], Null),
+    showDecision: Fun([Bool], Null),
   });
   init();
+
   // The first one to publish deploys the contract
   A.only(() => {
     const fortunePrice = declassify(interact.fortunePrice());
@@ -21,33 +24,38 @@ export const main = Reach.App(() => {
   commit();
 
   B.only(() => {
-    // const readFortune = declassify(interact.readFortune());
+
   });
   B.publish();
   
-
   // The second one to publish always attaches
   
-  var aliceDecision = 0;
+  var aliceDecision = false;
   invariant(balance() == fortunePrice)
-  while( aliceDecision == 0) {
+  while( aliceDecision == false) {
     commit()
-    B.interact.readFortune();
-    B.publish();
+
+    B.only(() => {
+      const fortune = declassify(interact.readFortune());
+    });
+    B.publish(fortune);
     commit();
+    A.interact.showFortune(fortune);
 
     A.only(() => {
-      const getDecision = declassify(interact.getDecision());
+      const decision = declassify(interact.getDecision());
     });
-    A.publish(getDecision);
+    A.publish(decision);
+    commit();
+    B.interact.showDecision(decision);
+    B.publish();
     
-    aliceDecision = getDecision;
+    aliceDecision = decision;
     continue;  
   }
   B.interact.acceptPayment(fortunePrice);
 
- 
-  transfer(balance()).to(A);
+  transfer(fortunePrice).to(B);
 
   commit();
 
