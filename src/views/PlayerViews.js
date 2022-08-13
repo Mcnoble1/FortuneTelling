@@ -91,7 +91,7 @@ exports.ShowFortune = class extends React.Component {
 
 exports.Done = class extends React.Component {
   render() {
-    const {outcome} = this.props;
+    // const {outcome} = this.props;
     return (
       <div>
         The Fortune Payment has been made into Bob's account.
