@@ -8,7 +8,7 @@ import * as backend from './build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 import { ALGO_WalletConnect as WalletConnect } from '@reach-sh/stdlib';
 
-const reach = loadStdlib(process.env);
+const reach = loadStdlib('ALGO');
 
 reach.setWalletFallback(reach.walletFallback({
     providerEnv: 'TestNet', WalletConnect
