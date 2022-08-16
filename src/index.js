@@ -5,13 +5,13 @@ import AttacherViews from './views/AttacherViews';
 import {renderDOM, renderView} from './views/render';
 import './index.css';
 import * as backend from './build/index.main.mjs';
-import { loadStdlib } from '@reach-sh/stdlib';
-import { ALGO_WalletConnect as WalletConnect } from '@reach-sh/stdlib';
+import { loadStdlib } from '@reach-sh/stdlib'; 
+import { ALGO_MyAlgoConnect as MyAlgoConnect } from '@reach-sh/stdlib';
 
 const reach = loadStdlib('ALGO');
 
 reach.setWalletFallback(reach.walletFallback({
-    providerEnv: 'TestNet', WalletConnect
+    providerEnv: 'TestNet', MyAlgoConnect
   }));
 
 const fortuneToInt = { 'You will be rich and famous': 0, 'You will be a Billionaire': 1, 'You will be a Millionaire': 2 };	
